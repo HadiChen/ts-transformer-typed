@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "composite": true,
+    "lib": ["DOM"],
+  },
+  "include": ["./tests", "./src"],
+  "exclude": ["**/dist", "**/tests", "**/macros-global.d.ts"]
+}

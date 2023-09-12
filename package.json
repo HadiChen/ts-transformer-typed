@@ -1,0 +1,37 @@
+{
+  "name": "ts-transformer-typed",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "eslint config",
+  "license": "MIT",
+  "author": "HadiChan <hwadeichan@gmail.com> (https://github.com/HadiChen)",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install"
+  },
+  "peerDependencies": {
+    "vue": "^2.7.0 || ^3.2.25"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@hdchan/eslint-config": "^1.0.0",
+    "@types/node": "^20.6.0",
+    "bun-types": "latest",
+    "eslint": "^8.49.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1"
+  },
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "packages/**/*.{ts,js}": "eslint --fix"
+  }
+}

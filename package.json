@@ -1,6 +1,5 @@
 {
   "name": "ts-transformer-typed",
-  "type": "module",
   "version": "0.1.0",
   "description": "eslint config",
   "license": "MIT",

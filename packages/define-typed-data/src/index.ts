@@ -1,1 +1,1 @@
-export declare function typedData<T>(): T;
+export declare function typedData<T extends object>(): T;

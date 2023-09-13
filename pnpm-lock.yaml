@@ -36,6 +36,9 @@ importers:
       lint-staged:
         specifier: ^14.0.1
         version: 14.0.1
+      typescript:
+        specifier: ^4.9.5
+        version: 4.9.5
 
   packages/define-typed-data:
     dependencies:

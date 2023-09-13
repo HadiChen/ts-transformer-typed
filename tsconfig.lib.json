@@ -23,6 +23,4 @@
       ]
     },
   },
-  "include": ["./src"],
-  "exclude": ["**/dist", "**/tests", "**/macros-global.d.ts"]
 }

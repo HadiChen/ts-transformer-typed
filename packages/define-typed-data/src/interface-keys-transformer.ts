@@ -2,12 +2,7 @@ import type * as Ts from 'typescript';
 import {
   createProgram,
   ScriptTarget,
-  transpileModule,
   transform,
-  transpile,
-  ModuleKind,
-  forEachChild,
-  isTypeAliasDeclaration,
   createPrinter,
 } from 'typescript';
 import transformer from './transformer';

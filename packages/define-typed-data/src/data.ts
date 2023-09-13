@@ -10,9 +10,9 @@ interface Baz {
 }
 
 export interface Foo {
-  a: string;
+  a?: string;
   bar: Bar;
-  bazArray1: Array<{
+  bazArray1?: Array<{
     a: number;
     b: string;
   }>;

@@ -221,7 +221,7 @@ function getSymbolProperties(
    * 接受处理函数即可转换位对应的输出数据
    */
   return properties.map((item) => {
-    return item.type as any;
+    return item.name as any;
   });
 }
 

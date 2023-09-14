@@ -1,7 +1,7 @@
 {
   "name": "ts-transformer-typed",
   "version": "0.1.0",
-  "description": "eslint config",
+  "description": "",
   "license": "MIT",
   "author": "HadiChan <hwadeichan@gmail.com> (https://github.com/HadiChen)",
   "scripts": {

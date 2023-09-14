@@ -1,11 +1,15 @@
 import type * as Ts from 'typescript';
-import path from 'node:path';
+import * as path from 'node:path';
 import {
   visitEachChild,
   SyntaxKind,
   isCallExpression,
   isJSDocSignature,
   factory,
+  SymbolFlags,
+  isIdentifier,
+  isBlock,
+  isModuleBlock,
 } from 'typescript';
 import { some, flattenDeep } from 'lodash-es';
 
@@ -226,15 +230,17 @@ function getSymbolProperties(
 }
 
 const visitNode = (node: Ts.Node, program: Ts.Program): Ts.Node => {
+  const typeChecker = program.getTypeChecker();
+
   if (node.kind === SyntaxKind.SourceFile) {
-    const locals = (node as any).locals || [];
+    const locals = (node as any).locals;
+
     locals.forEach((symbol: Ts.Symbol, key: string) => {
       if (!symbolMap.has(key)) {
         symbolMap.set(key, symbol);
       }
     });
   }
-  const typeChecker = program.getTypeChecker();
   if (!isKeysCallExpression(node, typeChecker)) {
     return node;
   }

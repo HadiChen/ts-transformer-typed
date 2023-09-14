@@ -1,0 +1,29 @@
+{
+  "name": "ts-transformer",
+  "version": "0.1.0",
+  "description": "ts transformer",
+  "license": "MIT",
+  "author": "HadiChan <hwadeichan@gmail.com> (https://github.com/HadiChen)",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "typeScript",
+    "typeScript transformer",
+    "ts",
+    "ts transformer typed"
+  ],
+  "peerDependencies": {
+    "typescript": ">=4.0"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.9"
+  }
+}

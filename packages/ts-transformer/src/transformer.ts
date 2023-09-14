@@ -16,20 +16,24 @@ const symbolMap = new Map<string, Ts.Symbol>();
 const indexTs = path.join(__dirname, './index.ts');
 
 const isKeysCallExpression = (node: Ts.Node, typeChecker: Ts.TypeChecker): node is Ts.CallExpression => {
-  if (!Ts.isCallExpression(node)) {
-    return false;
-  }
-  const signature = typeChecker.getResolvedSignature(node);
-  if (isUndefined(signature)) {
-    return false;
-  }
+  if (node.parent) {
+    if (!Ts.isCallExpression(node)) {
+      return false;
+    }
+    const signature = typeChecker.getResolvedSignature(node);
+    if (isUndefined(signature)) {
+      return false;
+    }
 
-  const { declaration } = signature;
-  return !!declaration
+    const { declaration } = signature;
+    return !!declaration
     && !Ts.isJSDocSignature(declaration)
     && (path.join(declaration.getSourceFile().fileName) === indexTs)
     && !!declaration.name
     && declaration.name.getText() === 'typedData';
+  }
+
+  return false;
 };
 
 export const transformer = (program: Ts.Program) => {

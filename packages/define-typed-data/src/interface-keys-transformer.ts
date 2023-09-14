@@ -1,9 +1,12 @@
-import type * as Ts from 'typescript';
+import * as Ts from 'typescript';
 import {
   createProgram,
   ScriptTarget,
   transform,
   createPrinter,
+  transpileModule,
+  createSourceFile,
+  CreateSourceFileOptions,
 } from 'typescript';
 import transformer from './transformer';
 
@@ -12,6 +15,10 @@ export function compile(filePaths: string[], writeFileCallback?: Ts.WriteFileCal
     strict: true,
     noEmitOnError: true,
     suppressImplicitAnyIndexErrors: true,
+    /**
+     * ts@5.5 将抛弃 `suppressImplicitAnyIndexErrors`
+     */
+    ignoreDeprecations: '5.0',
     target: ScriptTarget.ES5,
   });
   const transformers: Ts.CustomTransformers = {
@@ -19,18 +26,32 @@ export function compile(filePaths: string[], writeFileCallback?: Ts.WriteFileCal
     after: [],
   };
 
-  const sourceFile = program.getSourceFile(filePaths[0]);
-  const res = transform(sourceFile!, [
-    transformer(program),
-  ]);
+  const code = `
+    interface Foo {
+      a?: string;
+      b: number
+    }
+
+    const foo = typedData<Foo>();
+
+    const dfn = () => {
+      document.title = foo.a || '';
+      return foo;
+    }
+  `;
   const printer = createPrinter();
-  /**
-   * printFile 能获取转换后的代码
-   *
-   * 相当于 program.emit
-   */
-  const r = printer.printFile(res.transformed[0]);
-  console.log(5, r);
+  // const { transformed } = transform(sourceFile!, [
+  //   transformer(program),
+  // ]);
+  // const { outputText } = transpileModule(code, {
+  //   transformers: {
+  //     before: [
+  //       transformer(program),
+  //     ],
+  //   },
+  // });
+
+  // console.log(outputText);
 
   // const xx = transpile(res.transformed[0].text, {
   //   target: ScriptTarget.ESNext,
@@ -51,11 +72,20 @@ export function compile(filePaths: string[], writeFileCallback?: Ts.WriteFileCal
   //     console.log(33, declaration.name);
   //   });
   // });
-
   const {
     emitSkipped,
     diagnostics,
   } = program.emit(undefined, writeFileCallback, undefined, false, transformers);
+
+  const sourceFile = createSourceFile('xx.ts', code, {
+    languageVersion: Ts.ScriptTarget.ESNext,
+  });
+  // const sourceFile = program.getSourceFile(filePaths[0]);
+  const res = transform(sourceFile!, [
+    transformer(program),
+  ]);
+  const r = printer.printFile(res.transformed[0]);
+  console.log(5, r);
 
   if (emitSkipped) {
     throw new Error(diagnostics.map(diagnostic => diagnostic.messageText).join('\n'));

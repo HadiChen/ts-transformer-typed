@@ -1,4 +1,4 @@
-import type * as Ts from 'typescript';
+import * as Ts from 'typescript';
 import * as path from 'node:path';
 import {
   visitEachChild,
@@ -11,7 +11,7 @@ import {
   isBlock,
   isModuleBlock,
 } from 'typescript';
-import { some, flattenDeep } from 'lodash-es';
+import { some, flattenDeep, isUndefined } from 'lodash-es';
 
 interface Property {
   name: string;
@@ -26,19 +26,31 @@ const symbolMap = new Map<string, Ts.Symbol>();
 const indexTs = path.join(__dirname, './index.ts');
 
 const isKeysCallExpression = (node: Ts.Node, typeChecker: Ts.TypeChecker): node is Ts.CallExpression => {
-  if (!isCallExpression(node)) {
-    return false;
-  }
-  const signature = typeChecker.getResolvedSignature(node);
-  if (typeof signature === 'undefined') {
-    return false;
-  }
-  const { declaration } = signature;
-  return !!declaration
-    && !isJSDocSignature(declaration)
+  if (node.parent) {
+    if (!Ts.isCallExpression(node)) {
+      return false;
+    }
+    const signature = typeChecker.getResolvedSignature(node);
+    if (isUndefined(signature)) {
+      return false;
+    }
+
+    const { declaration } = signature;
+
+    const flag = !!declaration
+    && !Ts.isJSDocSignature(declaration)
     && (path.join(declaration.getSourceFile().fileName) === indexTs)
     && !!declaration.name
     && declaration.name.getText() === 'typedData';
+
+    if (flag) {
+      console.log(1, declaration.name.getText());
+    }
+
+    return flag;
+  }
+
+  return false;
 };
 
 const getModifierType = (modifier: Ts.Token<Ts.SyntaxKind>): string => {
@@ -235,7 +247,7 @@ const visitNode = (node: Ts.Node, program: Ts.Program): Ts.Node => {
   if (node.kind === SyntaxKind.SourceFile) {
     const locals = (node as any).locals;
 
-    locals.forEach((symbol: Ts.Symbol, key: string) => {
+    locals?.forEach?.((symbol: Ts.Symbol, key: string) => {
       if (!symbolMap.has(key)) {
         symbolMap.set(key, symbol);
       }
